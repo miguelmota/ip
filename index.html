@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="content-language" content="en-us">
+  <meta name="description" content="IP address">
+  <meta name="keywords" content="ip, ip address, cloudflare">
+  <meta name="robots" content="index,follow">
+  <meta name="googlebot" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="application-name" content="IP">
+  <title>IP</title>
+</head>
+<body>
+  <output id="output"></output>
+  <script>
+    function update() {
+      const output = document.getElementById('output')
+      fetch('https://www.cloudflare.com/cdn-cgi/trace')
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.split('\n')
+        const obj = lines.reduce((acc, line) => {
+          const kv = line.split('=')
+          acc[kv[0]] = kv[1]
+          return acc
+        }, {})
+        const ip = obj['ip']
+        const loc = obj['loc']
+        output.innerHTML = lines.join('<br>')
+        window.document.title = `IP ${ip || ''} ${loc ? `(${loc})` : ''}`
+      })
+      .catch(err => {
+        output.innerHTML = err.message
+        window.document.title = 'IP (error)'
+      })
+      .finally(() => {
+        setTimeout(() => {
+          update()
+        }, 10 * 1000)
+      })
+    }
+
+    update()
+</script>
+<body>
+</html>
