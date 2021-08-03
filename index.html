@@ -19,10 +19,12 @@
 <body>
   <output id="output"></output>
   <script>
+    const output = document.getElementById('output')
     function update() {
-      const output = document.getElementById('output')
-      fetch('https://www.cloudflare.com/cdn-cgi/trace')
-      .then(res => res.text())
+      const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.cloudflare.com/cdn-cgi/trace')
+      const data = fetch(url)
+      .then(res => res.json())
+      .then(json => json.contents)
       .then(text => {
         const lines = text.split('\n')
         const obj = lines.reduce((acc, line) => {
