@@ -21,10 +21,9 @@
   <script>
     const output = document.getElementById('output')
     function update() {
-      const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.cloudflare.com/cdn-cgi/trace')
-      const data = fetch(url)
-      .then(res => res.json())
-      .then(json => json.contents)
+      const url = 'https://www.cloudflare.com/cdn-cgi/trace'
+      fetch(url)
+      .then(res => res.text())
       .then(text => {
         const lines = text.split('\n')
         const obj = lines.reduce((acc, line) => {
